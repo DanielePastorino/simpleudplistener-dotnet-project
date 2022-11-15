@@ -12,12 +12,14 @@ namespace SimpleUdpListener
     {
         private static int port;
         private static string pathFile;
+        private static string sourceIp;
 
         public Main(string[] args) 
         {
             // Default 
             port = 5000;
             pathFile = "log.txt";
+            sourceIp = "";
 
             var res = Parser.Default.ParseArguments<Options>(args).MapResult((opts) =>
             RunOptionsAndReturnExitCode(opts), //in case parser sucess
@@ -27,9 +29,12 @@ namespace SimpleUdpListener
             {
                 try
                 {
-                    UDPController udpl = new UDPController(port, pathFile);
+                    UDPController udpl = new UDPController(port, pathFile, sourceIp);
                     udpl.UDPListener();
-                    Console.WriteLine($"Listening on port {port} - logging on {pathFile}");
+                    if (sourceIp != "")
+                        Console.WriteLine($"Listening on port {port} - only from: {sourceIp} - logging on {pathFile}");
+                    else
+                        Console.WriteLine($"Listening on port {port} - from any IP - logging on {pathFile}");
                 }
                 catch (Exception ex)
                 {
@@ -51,6 +56,9 @@ namespace SimpleUdpListener
 
             if (!string.IsNullOrEmpty(o.FileName))
                 pathFile = o.FileName;
+
+            if (!string.IsNullOrEmpty(o.SourceIp))
+                sourceIp = o.SourceIp;
 
             return true;
         }

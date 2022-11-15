@@ -15,5 +15,9 @@ namespace SimpleUdpListener.Classes
 
         [Option('o', "outputFile", Required = false, HelpText = "Set output file name")]
         public string FileName { get; set; }
+        
+        [Option('s', "sourceIp", Required = false, HelpText = "Set allowed source IP message")]
+        public string SourceIp { get; set; }
+
     }
 }
